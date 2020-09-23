@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
+const Restaurant=require('./models/restaurant');
 
 
 const port = PORT || 3000;
@@ -30,6 +31,7 @@ app.get('/', (req, res) =>{
     res.send('bonjour')
 });
 
+<<<<<<< HEAD
 
 
 // models 
@@ -83,6 +85,8 @@ app.post('/hotels', (req, res) =>{
         });
     });
 
+=======
+>>>>>>> dafb435966ab4fb17684ad3ede0b78763d9bfb49
 app.listen(port, ()=>{
     console.log('Server started on :' + '' + PORT)
 });
