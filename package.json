@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon inde.js"
+    "start": "node indextes"
   },
   "keywords": [],
   "author": "",

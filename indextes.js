@@ -1,3 +1,5 @@
+
+require('dotenv').config();
 const express=require('express');
 const mongoose=require('mongoose');
 const port =process.env.PORT||3000;
@@ -10,10 +12,23 @@ mongoose.connect('mongodb://localhost:27017/restarantapp',
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
+},(err)=>{
+    if(err !==null){
+        console.log('DB is not connected');
+
+    }
+    console.log('DB is coonnected');
 }
 );
 
-const restaurant=new mongoose.Schema({
+
+app.get('/',(req,res)=>{
+    res.send('you are welcome');
+})
+
+//models start
+
+const Schema={
     name:String,
     address:String,
      city:String,
@@ -21,28 +36,91 @@ const restaurant=new mongoose.Schema({
     stars:Number,
     cuisine:String,
     priceCategory:Number
-});
-const Restaurant=mongoose.model('Restaurant',restaurantSchema);
+};
+// const Schema = new mongoose.Schema(schema);
+const RestaurantModel = mongoose.model("Restaurant", Schema);
+// const Restaurants=mongoose.model('Restaurants',restaurantsSchema);
 
 
-app.post('/restaurants',(req,res)=>{
-const restaurantname=new Restaurant({
-    name:req.body.name,
-    address:req.body.address,
-    city:req.body.city,
-    country:req.body.country,
-    stars:req.body.stars,
-    cuisine:req.body.cuisine,
-    priceCategory:req.body.priceCategory
+
+
+//models enda
+app.get('/restaurants/:id',(req,res)=>{
+    console.log('req.body',req.params);
+    Restaurant.findById(req.params.id, (err,restaurant)=>{
+        if(err !==null){
+            res.json({
+                success:false,
+                message:err.toString()
+            });
+            return;
+        }
+        res.json({
+            success:true,
+            data:restaurant
+    
+        });
+
+    });
+
+})
+
+app.get('/restaurant',(req,res)=>{
+    RestaurantModel.find({}, (err,restaurant)=>{
+        if(err !==null){
+            res.json({
+                success:false,
+                message:err.toString()
+            });
+            return;
+        }
+        res.json({
+            success:true,
+            data:restaurant
+        });
+
+    });
 });
-restaurantname.save((err,restaurant)=>{
+
+app.post('/restaurant',(req,res)=>{
+    console.log('/restaurant req.body',req.body);
+ const {
+    name='',
+    address='',
+     city='',
+     country='',
+    stars='',
+    cuisine='',
+    priceCategory=''
+   }=req.body
+const restaurant=new RestaurantModel({
+    name,
+    address,
+     city,
+     country,
+    stars,
+    cuisine,
+    priceCategory
+})
+
+ restaurant.save((err,restaurants)=>{
+     if(err !==null){
+        res.json({
+            success:false,
+            message:err.toString()
+        });
+        return;
+    }
+
     res.json({
         success:true,
-        data:restaurant,
+        data:restaurants,
     });
 });
 
 });
+//controllers routes start
+//contrloleur end
 
 
 app.listen(port, ()=>{

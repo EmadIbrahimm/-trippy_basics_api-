@@ -31,62 +31,6 @@ app.get('/', (req, res) =>{
     res.send('bonjour')
 });
 
-<<<<<<< HEAD
-
-
-// models 
-
-const hotelsSchema = new mongoose.Schema({
-    name : String,
-    address : String,
-    city : String,
-    country : String,
-    stars : Number, 
-    hasSpa : Boolean,
-    priceCategory : Number
-});
-
-const hotels = mongoose.model('hotel', hotelsSchema);
-
-
-
-app.post('/hotels', (req, res) =>{
-    console.log('post /hotel', req.body)
-
-    const {
-        name = '',
-        address = '',
-        city = '',
-        country = '',
-        stars = '',
-        hasSpa = ''
-    } = req.body;
-    
-    const hotel = new hotelModel({
-        name,
-        address,
-        city,
-        country,
-        stars,
-        hasSpa
-    });
-
-    hotel.save((err, hotel)=>{
-        if (err) {
-            res.json({
-                seccess: false,
-                message: err.toSting(),
-            });
-            return;
-        }
-        res.json({
-            seccess : true,
-            data : hotel
-        });
-    });
-
-=======
->>>>>>> dafb435966ab4fb17684ad3ede0b78763d9bfb49
 app.listen(port, ()=>{
     console.log('Server started on :' + '' + PORT)
 });
