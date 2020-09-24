@@ -1,12 +1,24 @@
 require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
-const Restaurant=require('./models/restaurant');
+// const Restaurant=require('./models/restaurant');
 
 
-const port = PORT || 3000;
 
-mongoose.connect(MONGODB_URI || "mongodb://localhost:27017/trippy_basics_api",
+const Schema = {
+    name : String,
+    address : String,
+    city : String,
+    country : String,
+    stars : Number, 
+    hasSpa : Boolean,
+    priceCategory : Number
+};
+
+// const Schema = new mongoose.Schema(schema);
+const hotelsModel = mongoose.model("hotels", Schema);
+
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/trippy_basics_api",
     {
         useNewUrlParser: true,
         useCreateIndex: true,
@@ -18,27 +30,70 @@ mongoose.connect(MONGODB_URI || "mongodb://localhost:27017/trippy_basics_api",
     }
 );
 
-// creation hotel modèle
 
+var port = process.env.PORT || 3000;
 
-const app = express();
-app.use(express.urlencoded({ extended: true }));
+var app = express();
+
 app.use(express.json());
 
 
-app.get('/', (req, res) =>{
-    console.log('GET /', req.body)
-    res.send('bonjour')
-});
+app.post("/hotels", (req, res) => {   
+    const {
+        name = '',
+        address = '',
+        city = '',
+        country = '',
+        stars = '',
+        hasSpa = ''
+    } = req.body;
 
-app.listen(port, ()=>{
-    console.log('Server started on :' + '' + PORT)
-});
+    const hotels = new hotelsModel({
+        name,
+        address,
+        city,
+        country,
+        stars,
+        hasSpa
+    });
+  
+    hotels.save((err, hotels) => {
+      res.json({
+        success: true,
+        data: hotels
+      });
+    });
+  
+  });
+  
 
+  app.get("/hotels", (req, res)=> {
+    hotelsModel.find({},(err, hotels)=> {
+        if (err) {
+            res.json({
+                success : false,
+                message : err.toSting()
+            });
+            return;
+        }
+      res.json({
+        success: true,
+        data: hotels
+      });
+    });
+  });
+  
+  app.get("/hotels/:id", (req, res)=> {
 
+    hotelModel.findOne({ _id: req.params.id }, (err, hotels)=> {
+      res.json({
+        success: true,
+        data: hotels
+      });
+    });
+  });
 
-
-
-
-
-
+  app.listen(port, function() {
+    console.log('Server started on port:', port );
+  });
+  

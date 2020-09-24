@@ -12,12 +12,4 @@ const restaurant=new mongoose.Schema({
 });
 const Restaurant=mongoose.model('Restaurant',restaurantSchema);
 
-
-// const restaurantname=new Restaurant({
-// firstname:'',
-// firtsname:'',
-// surname:'',
-// age:Number,
-// grade:''
-// });
-module.exports=Restaurant;
+module.exports = Restaurant;
